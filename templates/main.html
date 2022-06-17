@@ -1,0 +1,11 @@
+<!doctype html>
+<html>
+<head>
+  <title>Main</title>
+</head>
+<body>
+  {% for wat in wats %}
+    <div><a href="{{ url_for("directorSite", name=wat[1]) }}"> {{ wat[0] }}</a></div>
+  {% endfor %}
+</body>
+</html>

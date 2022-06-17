@@ -1,0 +1,54 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+
+\title{Protokol k projektu MAD}
+\author{Maximilián Zivák}
+\date{June 2022}
+
+\begin{document}
+
+\maketitle
+
+\section{Subory}
+Folder projektu obsahuje
+\begin{itemize}
+    \item createDB.py - skript ktory spravi databazu z tsv suborov ulozenych v /data
+    \item main.py - samotny flask webserver
+    \item subfolder /templates
+    \begin{itemize}
+        \item main.html home page
+        \item director.html template pre osobnu stranku kazdeho rezisera
+    \end{itemize}
+    \item /data
+    \begin{itemize}
+        \item skript downloadData.py ktory stiahne tsv files z IMDB stranky a unpackne ich
+    \end{itemize}
+\end{itemize}
+\section{Postup}
+\begin{itemize}
+    \item pip install wget
+    \item stiahnem  \href{http://datasets.imdbws.com/}{IMDB datasety} spustenim skriptu v /data
+    \item spravim databazu
+    \begin{itemize}
+        \item v skripte createDB.py zmenim variable maxEntries, defaultne 10e4
+        \item spustim skript
+    \end{itemize}
+    \item spustime webserver pouzitim
+    \begin{itemize}
+        \item export FLASK\_APP=main.py
+        \item flask run --port=PORT (pouzival som 1027 sa mi zda)
+    \end{itemize}
+    \item otvorim localhost
+\end{itemize}
+\section{Ine zdroje}
+\begin{itemize}
+    \item pouzivam open sourcovu \href{https://imdb-api.com/}{imdb api} ktora je limitovana na 100 callov/24hr cez jeden key
+\end{itemize}
+\section{Linky}
+\begin{itemize}
+    \item https://imdb-api.com/
+    \item https://www.imdb.com/interfaces/ 
+    
+\end{itemize}
+\end{document}

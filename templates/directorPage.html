@@ -1,0 +1,145 @@
+<html>
+  <style>
+    table, th, td {
+      border: 1px solid;
+    }
+    #bio{
+      padding-right: 50%;
+    }
+    </style>
+  <head>
+    {{toSend["fullName"][0]}}
+    <div>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawActors);
+      google.charts.setOnLoadCallback(drawRating);
+      window.onload = (event) => {
+  drawTopRatedMovies();
+  };
+      function drawRating() {
+        var dataPoints = [
+          ['Year','Rating']
+        ];
+        {% for rating in toSend["ratingOverTime"] %}
+        dataPoints.push([{{rating[1]}},{{rating[0]}}]);
+        {% endfor %}
+        if (dataPoints.length>1){
+        var data = google.visualization.arrayToDataTable(dataPoints);
+        var options = {
+          title: 'Rating over time',
+          curveType: 'function',
+          width : 800,
+          height: 400,
+          chartArea:{left:20,top:20},
+               legend: {'position': 'bottom'}
+        };
+        var chart = new google.visualization.LineChart(document.getElementById('ratingOverTime'));
+        chart.draw(data, options);
+      }
+      else{
+        document.getElementById("ratingOvertime").innerHTML="Not enough data points";
+      }
+      }
+      function drawActors(){
+        var dataPoints = [
+          ["Actor","Count"]
+        ];
+        {% for actor in toSend["favActors"] %}
+        dataPoints.push(["{{actor[0]}}",{{actor[1]}}]);
+        {% endfor %}
+        var options = {
+          title:"FavActors",
+          width : 800,
+          height: 400,
+          position: "left",
+          chartArea:{left:100,top:20},
+               legend: {'position': 'bottom'}
+        }
+        if (dataPoints.length > 1){
+        console.log(dataPoints)
+        var data = google.visualization.arrayToDataTable(dataPoints);
+        var chart = new google.visualization.BarChart(document.getElementById("favActors"));
+        chart.draw(data, options);
+        }
+        else{
+          document.getElementById("favActors").innerHTML = "Not enough data points";
+        }
+      }
+      function drawTopRatedMovies(){
+        var dataPoints = [];
+        {% for movie in toSend["topMovies"] %}
+          dataPoints.push(["{{movie[1]}}",{{movie[0]}}]);
+        {% endfor %}
+        var newHTML = "<table> <tr> <th>Rating</th><th>Movie</th></tr>"
+        
+        if (dataPoints.length>1){
+          for (let movie in dataPoints){
+            newHTML = newHTML.concat("<tr><td>",dataPoints[movie][1],"</td><td>",dataPoints[movie][0],"</td></tr>");
+          }
+          newHTML=newHTML.concat("</table>");
+          document.getElementById("topMovies").innerHTML = newHTML;
+        }
+        else{
+          document.getElementById("topMovies").innerHTML = "Not enough data points";
+        }
+      }
+      //Honestly this should work but API is limited to 100 calls lol
+
+      // function drawProfit(){
+      //   var dataPoints=[
+      //     ["Movie","Profit"]
+      //   ];
+      //  // console.log({{toSend}});
+      //   {%for profit in toSend["profitOverTime"]%}
+      //   dataPoints.push([{{profit[0]}},{{profit[1]}}]);
+      //   {%endfor%}
+      //   console.log(dataPoints)
+      //   var data = google.visualization.arrayToDataTable(dataPoints);
+      //   console.log({{toSend["profitOverTime"]}})
+      //   var options = {
+      //     title: 'Profit over time',
+      //     curveType: 'function',
+      //     legend: { position: 'bottom' }
+      //   };
+      //   var chart = new google.visualization.LineChart(document.getElementById('profitOverTime'));
+      //   chart.draw(data, options);
+      // }
+    </script>
+  </div>
+  <script>
+    function changeViz(){
+      var t = document.getElementById("vizTypes");
+      var selectors = ["topMovies", "ratingOverTime","favActors"];
+      for (let vizType in selectors){
+        let currElement = document.getElementById(selectors[vizType]);
+        console.log(vizType)
+        if (t.value==selectors[vizType]){
+          currElement.removeAttribute("hidden");
+        }
+        else{
+          currElement.setAttribute("hidden", "");
+        }
+      }
+    }
+  </script>
+  </head>
+  <body onload="drawTopRatedMovies();">
+    <div id="bio">
+      <img src="{{toSend["bioImg"][0]}}"  style="width:128px;height:128px;">
+      <p>Bio</p>
+      <p>{{toSend["bioImg"][1]}}</p>
+    </div>
+    <p>
+    <select name="vizTypes" onchange="changeViz()" id="vizTypes">
+      <option value="ratingOverTime">Rating</option>   
+      <option value="topMovies" >Top rated movies</option>      
+      <option value="favActors">Actors</option>
+    </select>
+    <div id="ratingOverTime" style="width: 900px; height: 1000px" ></div>    
+    <div id="topMovies" style="width: 900px; height: 1000px;" hidden></div>
+    <div id="favActors" style="width: 900px; height: 1000px" ></div>
+    </p>
+  </body>
+</html>
