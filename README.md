@@ -1,3 +1,3 @@
 # mad_projekt
-MAD Projekt
+MAD Projekt \n
 protokol, report v tex subfolderi
